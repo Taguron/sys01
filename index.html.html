@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社会福祉法人決算書報告ダッシュボード</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            color: #666;
+        }
+        
+        .tab.active {
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .input-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .input-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .input-group {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .input-group h3 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        
+        .form-row {
+            margin-bottom: 15px;
+        }
+        
+        .form-row label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #f0f0f0;
+        }
+        
+        .form-row input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-row input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .metric-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .metric-icon.revenue { background: linear-gradient(45deg, #4CAF50, #8BC34A); }
+        .metric-icon.expense { background: linear-gradient(45deg, #FF5722, #FF9800); }
+        .metric-icon.balance { background: linear-gradient(45deg, #2196F3, #03A9F4); }
+        .metric-icon.ratio { background: linear-gradient(45deg, #9C27B0, #E91E63); }
+        
+        .metric-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .metric-change {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .positive { color: #4CAF50; }
+        .negative { color: #F44336; }
+        .neutral { color: #666; }
+        
+        .summary-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .summary-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .summary-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .summary-item h3 {
+            margin-bottom: 10px;
+            color: #ecf0f1;
+        }
+        
+        .summary-item p {
+            line-height: 1.6;
+            color: #bdc3c7;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>社会福祉法人決算書報告ダッシュボード</h1>
+            <p>決算書から数値を転記するだけで重要指標を自動計算</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('input')">データ入力</button>
+            <button class="tab" onclick="showTab('dashboard')">ダッシュボード</button>
+            <button class="tab" onclick="showTab('report')">報告書</button>
+        </div>
+        
+        <div class="tab-content active" id="input">
+            <div class="input-section">
+                <h2>📊 決算書データ入力</h2>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <h3>資金収支計算書</h3>
+                        <div class="form-row">
+                            <label>事業活動収入（千円）</label>
+                            <input type="number" id="serviceRevenue" placeholder="例: 500000">
+                        </div>
+                        <div class="form-row">
+                            <label>介護保険収入（千円）</label>
+                            <input type="number" id="careInsuranceRevenue" placeholder="例: 300000">
+                        </div>
+                        <div class="form-row">
+                            <label>措置費収入（千円）</label>
+                            <input type="number" id="measureRevenue" placeholder="例: 100000">
+                        </div>
+                        <div class="form-row">
+                            <label>補助金収入（千円）</label>
+                            <input type="number" id="subsidyRevenue" placeholder="例: 50000">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <h3>支出項目</h3>
+                        <div class="form-row">
+                            <label>人件費支出（千円）</label>
+                            <input type="number" id="personnelExpense" placeholder="例: 350000">
+                        </div>
+                        <div class="form-row">
+                            <label>事業費支出（千円）</label>
+                            <input type="number" id="operatingExpense" placeholder="例: 80000">
+                        </div>
+                        <div class="form-row">
+                            <label>事務費支出（千円）</label>
+                            <input type="number" id="adminExpense" placeholder="例: 30000">
+                        </div>
+                        <div class="form-row">
+                            <label>設備関係支出（千円）</label>
+                            <input type="number" id="facilityExpense" placeholder="例: 20000">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <h3>貸借対照表</h3>
+                        <div class="form-row">
+                            <label>現金預金（千円）</label>
+                            <input type="number" id="cashDeposits" placeholder="例: 150000">
+                        </div>
+                        <div class="form-row">
+                            <label>借入金残高（千円）</label>
+                            <input type="number" id="loanBalance" placeholder="例: 80000">
+                        </div>
+                        <div class="form-row">
+                            <label>退職給付引当金（千円）</label>
+                            <input type="number" id="retirementReserve" placeholder="例: 60000">
+                        </div>
+                        <div class="form-row">
+                            <label>純資産合計（千円）</label>
+                            <input type="number" id="netAssets" placeholder="例: 200000">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <h3>前年度比較用</h3>
+                        <div class="form-row">
+                            <label>前年度事業活動収入（千円）</label>
+                            <input type="number" id="prevServiceRevenue" placeholder="例: 480000">
+                        </div>
+                        <div class="form-row">
+                            <label>前年度人件費支出（千円）</label>
+                            <input type="number" id="prevPersonnelExpense" placeholder="例: 340000">
+                        </div>
+                        <div class="form-row">
+                            <label>前年度純資産（千円）</label>
+                            <input type="number" id="prevNetAssets" placeholder="例: 190000">
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateMetrics()">📈 指標を計算する</button>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="dashboard">
+            <div class="dashboard-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon revenue">💰</div>
+                        <div class="metric-title">事業活動収入</div>
+                    </div>
+                    <div class="metric-value" id="revenueValue">-</div>
+                    <div class="metric-change" id="revenueChange">前年度比較</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon expense">📊</div>
+                        <div class="metric-title">人件費率</div>
+                    </div>
+                    <div class="metric-value" id="personnelRatio">-</div>
+                    <div class="metric-change">適正範囲: 60-70%</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon balance">💎</div>
+                        <div class="metric-title">収支差額</div>
+                    </div>
+                    <div class="metric-value" id="balanceValue">-</div>
+                    <div class="metric-change" id="balanceStatus">収支状況</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon ratio">🏦</div>
+                        <div class="metric-title">流動性比率</div>
+                    </div>
+                    <div class="metric-value" id="liquidityRatio">-</div>
+                    <div class="metric-change">現金預金/月間支出</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon revenue">📈</div>
+                        <div class="metric-title">収入構成</div>
+                    </div>
+                    <div class="metric-value" id="revenueComposition">-</div>
+                    <div class="metric-change">主要収入源の割合</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon balance">⚖️</div>
+                        <div class="metric-title">財務安全性</div>
+                    </div>
+                    <div class="metric-value" id="financialSafety">-</div>
+                    <div class="metric-change" id="safetyStatus">総合評価</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="report">
+            <div class="summary-section">
+                <h2>📋 決算報告書サマリー</h2>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <h3>収益分析</h3>
+                        <p id="revenueAnalysis">データを入力して計算を実行してください。</p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <h3>支出分析</h3>
+                        <p id="expenseAnalysis">データを入力して計算を実行してください。</p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <h3>財務健全性</h3>
+                        <p id="healthAnalysis">データを入力して計算を実行してください。</p>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <h3>今後の課題</h3>
+                        <p id="challengeAnalysis">データを入力して計算を実行してください。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        function formatNumber(num) {
+            if (num === null || num === undefined || isNaN(num)) return '-';
+            return new Intl.NumberFormat('ja-JP').format(num);
+        }
+        
+        function formatCurrency(num) {
+            if (num === null || num === undefined || isNaN(num)) return '-';
+            return formatNumber(num) + '千円';
+        }
+        
+        function formatPercentage(num) {
+            if (num === null || num === undefined || isNaN(num)) return '-';
+            return num.toFixed(1) + '%';
+        }
+        
+        function calculateMetrics() {
+            // Get input values
+            const serviceRevenue = parseFloat(document.getElementById('serviceRevenue').value) || 0;
+            const careInsuranceRevenue = parseFloat(document.getElementById('careInsuranceRevenue').value) || 0;
+            const measureRevenue = parseFloat(document.getElementById('measureRevenue').value) || 0;
+            const subsidyRevenue = parseFloat(document.getElementById('subsidyRevenue').value) || 0;
+            const personnelExpense = parseFloat(document.getElementById('personnelExpense').value) || 0;
+            const operatingExpense = parseFloat(document.getElementById('operatingExpense').value) || 0;
+            const adminExpense = parseFloat(document.getElementById('adminExpense').value) || 0;
+            const facilityExpense = parseFloat(document.getElementById('facilityExpense').value) || 0;
+            const cashDeposits = parseFloat(document.getElementById('cashDeposits').value) || 0;
+            const loanBalance = parseFloat(document.getElementById('loanBalance').value) || 0;
+            const retirementReserve = parseFloat(document.getElementById('retirementReserve').value) || 0;
+            const netAssets = parseFloat(document.getElementById('netAssets').value) || 0;
+            const prevServiceRevenue = parseFloat(document.getElementById('prevServiceRevenue').value) || 0;
+            const prevPersonnelExpense = parseFloat(document.getElementById('prevPersonnelExpense').value) || 0;
+            const prevNetAssets = parseFloat(document.getElementById('prevNetAssets').value) || 0;
+            
+            // Calculate metrics
+            const totalExpense = personnelExpense + operatingExpense + adminExpense + facilityExpense;
+            const balance = serviceRevenue - totalExpense;
+            const personnelRatio = serviceRevenue > 0 ? (personnelExpense / serviceRevenue) * 100 : 0;
+            const monthlyExpense = totalExpense / 12;
+            const liquidityMonths = monthlyExpense > 0 ? cashDeposits / monthlyExpense : 0;
+            
+            // Revenue growth
+            const revenueGrowth = prevServiceRevenue > 0 ? ((serviceRevenue - prevServiceRevenue) / prevServiceRevenue) * 100 : 0;
+            
+            // Update dashboard
+            document.getElementById('revenueValue').textContent = formatCurrency(serviceRevenue);
+            document.getElementById('revenueChange').textContent = `前年度比 ${revenueGrowth >= 0 ? '+' : ''}${formatPercentage(revenueGrowth)}`;
+            document.getElementById('revenueChange').className = `metric-change ${revenueGrowth >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('personnelRatio').textContent = formatPercentage(personnelRatio);
+            
+            document.getElementById('balanceValue').textContent = formatCurrency(balance);
+            document.getElementById('balanceStatus').textContent = balance >= 0 ? '黒字' : '赤字';
+            document.getElementById('balanceStatus').className = `metric-change ${balance >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('liquidityRatio').textContent = liquidityMonths.toFixed(1) + 'ヶ月';
+            
+            // Revenue composition
+            const careRatio = serviceRevenue > 0 ? (careInsuranceRevenue / serviceRevenue) * 100 : 0;
+            document.getElementById('revenueComposition').textContent = `介護保険 ${formatPercentage(careRatio)}`;
+            
+            // Financial safety assessment
+            let safetyScore = 0;
+            if (balance >= 0) safetyScore += 25;
+            if (personnelRatio <= 70) safetyScore += 25;
+            if (liquidityMonths >= 3) safetyScore += 25;
+            if (loanBalance / netAssets <= 0.5) safetyScore += 25;
+            
+            let safetyLevel = '';
+            if (safetyScore >= 75) safetyLevel = '良好';
+            else if (safetyScore >= 50) safetyLevel = '普通';
+            else safetyLevel = '要注意';
+            
+            document.getElementById('financialSafety').textContent = safetyLevel;
+            document.getElementById('safetyStatus').textContent = `スコア: ${safetyScore}/100`;
+            document.getElementById('safetyStatus').className = `metric-change ${safetyScore >= 75 ? 'positive' : safetyScore >= 50 ? 'neutral' : 'negative'}`;
+            
+            // Update report summaries
+            updateReportSummaries({
+                serviceRevenue, personnelExpense, balance, personnelRatio, 
+                liquidityMonths, revenueGrowth, safetyLevel, careRatio
+            });
+        }
+        
+        function updateReportSummaries(metrics) {
+            // Revenue analysis
+            const revenueText = `事業活動収入は${formatCurrency(metrics.serviceRevenue)}で、前年度比${metrics.revenueGrowth >= 0 ? '増加' : '減少'}（${formatPercentage(Math.abs(metrics.revenueGrowth))}）。介護保険収入が全体の${formatPercentage(metrics.careRatio)}を占めており、${metrics.careRatio > 60 ? '適切な' : '多様化が必要な'}収入構造となっています。`;
+            document.getElementById('revenueAnalysis').textContent = revenueText;
+            
+            // Expense analysis
+            const expenseText = `人件費率は${formatPercentage(metrics.personnelRatio)}で、${metrics.personnelRatio <= 70 ? '適正範囲内' : '高水準'}にあります。人材確保と経営効率のバランス${metrics.personnelRatio > 70 ? 'の見直しが必要' : 'は良好'}です。`;
+            document.getElementById('expenseAnalysis').textContent = expenseText;
+            
+            // Health analysis
+            const healthText = `財務健全性は「${metrics.safetyLevel}」と評価されます。流動性は${metrics.liquidityMonths.toFixed(1)}ヶ月分の資金を保有しており、${metrics.liquidityMonths >= 3 ? '安定した' : '改善が必要な'}運転資金状況です。`;
+            document.getElementById('healthAnalysis').textContent = healthText;
+            
+            // Challenge analysis
+            let challengeText = '';
+            if (metrics.balance < 0) challengeText += '収支改善が急務です。';
+            if (metrics.personnelRatio > 70) challengeText += '人件費率の適正化が必要です。';
+            if (metrics.liquidityMonths < 3) challengeText += '資金繰りの改善が求められます。';
+            if (challengeText === '') challengeText = '現在の経営状況は安定しており、継続的な質の向上と効率化に取り組むことが重要です。';
+            
+            document.getElementById('challengeAnalysis').textContent = challengeText;
+        }
+    </script>
+</body>
+</html>
