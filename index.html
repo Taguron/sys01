@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
             padding: 20px;
         }
@@ -21,31 +21,38 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         
         .header {
             text-align: center;
             margin-bottom: 40px;
-            background: linear-gradient(45deg, #2196F3, #21CBF3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2c3e50;
         }
         
         .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 10px;
+            color: #2196F3;
         }
         
         .header p {
             font-size: 1.1rem;
             color: #666;
+        }
+        
+        .notice {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #856404;
         }
         
         .tabs {
@@ -54,7 +61,6 @@
             border-radius: 15px;
             padding: 5px;
             margin-bottom: 30px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .tab {
@@ -71,9 +77,8 @@
         }
         
         .tab.active {
-            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            background: #2196F3;
             color: white;
-            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
         }
         
         .tab-content {
@@ -85,7 +90,7 @@
         }
         
         .input-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #2196F3;
             padding: 30px;
             border-radius: 15px;
             margin-bottom: 30px;
@@ -107,7 +112,6 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
-            backdrop-filter: blur(5px);
         }
         
         .input-group h3 {
@@ -134,13 +138,11 @@
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.9);
             font-size: 14px;
-            transition: all 0.3s ease;
         }
         
         .form-row input:focus {
             outline: none;
             background: white;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
         }
         
         .dashboard-grid {
@@ -151,17 +153,11 @@
         }
         
         .metric-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            background: white;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .metric-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9ecef;
         }
         
         .metric-header {
@@ -182,10 +178,10 @@
             color: white;
         }
         
-        .metric-icon.revenue { background: linear-gradient(45deg, #4CAF50, #8BC34A); }
-        .metric-icon.expense { background: linear-gradient(45deg, #FF5722, #FF9800); }
-        .metric-icon.balance { background: linear-gradient(45deg, #2196F3, #03A9F4); }
-        .metric-icon.ratio { background: linear-gradient(45deg, #9C27B0, #E91E63); }
+        .metric-icon.revenue { background: #4CAF50; }
+        .metric-icon.expense { background: #FF5722; }
+        .metric-icon.balance { background: #2196F3; }
+        .metric-icon.ratio { background: #9C27B0; }
         
         .metric-title {
             font-size: 1.1rem;
@@ -210,7 +206,7 @@
         .neutral { color: #666; }
         
         .summary-section {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            background: #2c3e50;
             color: white;
             padding: 30px;
             border-radius: 15px;
@@ -232,7 +228,6 @@
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
-            backdrop-filter: blur(5px);
         }
         
         .summary-item h3 {
@@ -246,7 +241,7 @@
         }
         
         .calculate-btn {
-            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            background: #4CAF50;
             color: white;
             padding: 15px 30px;
             border: none;
@@ -254,15 +249,23 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
             margin: 20px auto;
             display: block;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
         
         .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+            background: #45a049;
+        }
+        
+        .test-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
         }
         
         @media (max-width: 768px) {
@@ -286,9 +289,16 @@
 </head>
 <body>
     <div class="container">
+        <div class="test-message">
+            ✅ ページが正常に読み込まれました！このメッセージが表示されていれば、基本的な動作は問題ありません。
+        </div>
+        
         <div class="header">
             <h1>社会福祉法人決算書報告ダッシュボード</h1>
             <p>決算書から数値を転記するだけで重要指標を自動計算</p>
+            <div class="notice">
+                <strong>⚠️ 使用上の注意：</strong> このツールはブラウザ内でのみ動作し、データはサーバーに送信されません。共用PCでの使用後は、ブラウザの履歴・キャッシュをクリアしてください。
+            </div>
         </div>
         
         <div class="tabs">
@@ -469,7 +479,11 @@
     </div>
 
     <script>
+        console.log('スクリプトが読み込まれました');
+        
         function showTab(tabName) {
+            console.log('タブ切り替え:', tabName);
+            
             // Hide all tab contents
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.remove('active'));
@@ -501,6 +515,8 @@
         }
         
         function calculateMetrics() {
+            console.log('計算開始');
+            
             // Get input values
             const serviceRevenue = parseFloat(document.getElementById('serviceRevenue').value) || 0;
             const careInsuranceRevenue = parseFloat(document.getElementById('careInsuranceRevenue').value) || 0;
@@ -518,6 +534,8 @@
             const prevPersonnelExpense = parseFloat(document.getElementById('prevPersonnelExpense').value) || 0;
             const prevNetAssets = parseFloat(document.getElementById('prevNetAssets').value) || 0;
             
+            console.log('入力値:', {serviceRevenue, personnelExpense});
+            
             // Calculate metrics
             const totalExpense = personnelExpense + operatingExpense + adminExpense + facilityExpense;
             const balance = serviceRevenue - totalExpense;
@@ -527,6 +545,8 @@
             
             // Revenue growth
             const revenueGrowth = prevServiceRevenue > 0 ? ((serviceRevenue - prevServiceRevenue) / prevServiceRevenue) * 100 : 0;
+            
+            console.log('計算結果:', {balance, personnelRatio, liquidityMonths});
             
             // Update dashboard
             document.getElementById('revenueValue').textContent = formatCurrency(serviceRevenue);
@@ -550,7 +570,7 @@
             if (balance >= 0) safetyScore += 25;
             if (personnelRatio <= 70) safetyScore += 25;
             if (liquidityMonths >= 3) safetyScore += 25;
-            if (loanBalance / netAssets <= 0.5) safetyScore += 25;
+            if (netAssets > 0 && loanBalance / netAssets <= 0.5) safetyScore += 25;
             
             let safetyLevel = '';
             if (safetyScore >= 75) safetyLevel = '良好';
@@ -566,6 +586,8 @@
                 serviceRevenue, personnelExpense, balance, personnelRatio, 
                 liquidityMonths, revenueGrowth, safetyLevel, careRatio
             });
+            
+            console.log('計算完了');
         }
         
         function updateReportSummaries(metrics) {
@@ -590,6 +612,12 @@
             
             document.getElementById('challengeAnalysis').textContent = challengeText;
         }
+        
+        // ページ読み込み完了時のテスト
+        window.addEventListener('load', function() {
+            console.log('ページ読み込み完了');
+            alert('ページが正常に読み込まれました！');
+        });
     </script>
 </body>
 </html>
